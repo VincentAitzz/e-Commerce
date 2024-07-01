@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloup Co - Iniciar sesión</title>
+  <link rel="stylesheet" href="res/css/style.css">
+</head>
+<body>
+  <main>
+    <h2>Login</h2>
+    <form action="login" method="POST">
+        <input type="text" name="user" id="user" placeholder="User" required>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <input type="submit" class="btn-login" value="Login">
+    </form>
+    <a href="register" class="btn-register">Register</a>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+   <% if (typeof alert != "undefined")  { %>
+    <script>
+    Swal.fire({
+      title:'<%= alertTitle %>',
+      text:'<%= alertMessage %>',
+      icon:'<%= alertIcon %>',
+      showConfirmButton: <%= showConfirmButton %>,
+      timer: <%= timer %>
+    }).then(()=>{
+      window.location='/<%= ruta %>'
+    })
+    </script>
+  <% } %>
+  <footer>
+    &copy; 2023 Cloup Co. Todos los derechos reservados.
+  </footer>
+</body>
+</html>

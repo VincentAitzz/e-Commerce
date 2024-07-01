@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloup Co - Tienda Online</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="res/css/custom.css">  
+</head>
+<body>
+  
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand me-auto" href="#">Cloup Co</a>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active mx-lg-2" aria-current="page" href="#">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-lg-2" href="#">Productos</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Categorias
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+            <% if (login) { %>
+              <li><a class="nav-link mx-lg-2" href="/perfil">Perfil</a></li>
+              <li><a class="nav-link mx-lg-2" href="/carrito"> Mi Carrito</a></li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+      <% if (login) { %>
+        <a class="login-button" href="/logout">Cerrar sesión</a>
+      <% } else { %>
+        <a class="login-button" href="/login">Iniciar sesión</a>
+      <% } %>
+      <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <!--  
+  <header>
+        <nav id="nav" class="closed">
+          <div class="menu-icon" onclick="toggleMenu()">
+            <img src="/res/img/menuIcon.png" alt="Icono de menú">
+          </div>
+          <div class="menu-content">
+            <ul>
+              <li><a href="/">Inicio</a></li>
+              <li><a href="/categorias">Categorías</a></li>
+              <li><a href="/product">Productos</a></li>
+              <% if (login) { %>
+                <li><a href="/perfil">Perfil</a></li>
+                <li><a href="/logout">Cerrar sesión</a></li>
+                <li><a href="/carrito">Carrito</a></li>
+              <% } else { %>
+                <li><a href="/login">Iniciar sesión</a></li>
+              <% } %>
+            </ul>
+            <div class="developer-info">
+            <div class="images">
+              <img src="res/img/devProfile.png" alt="Foto del Desarrollador">
+              <img src="res/img/logoInstitucion.png" alt="Logo de la Institución">
+            </div>
+            <div class="info">
+              <p>Vicente Pavez</p>
+              <p>v.andrehpavez@gmail.com</p>
+              <p>+56 9 9368 2841</p>
+              <p>Instituto Profesional Santo Tomás</p>
+            </div>
+          </div>
+        </nav>
+      </header>
+-->
+    <section class="hero-section">
+      <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-cloumn">
+        <h1>¡Bienvenido/a!</h1>
+      </div>
+    </section>
+    <section class="featured-products">
+        <h2>Productos Destacados</h2>
+        <div class="product-grid">
+            <% featuredProducts.forEach(product => { %>
+                <div class="product-card">
+                    <img src="res/img/<%=product.imagen %>" alt="<%= product.nombre %>">
+                    <h3><%= product.nombre %></h3>
+                    <p><%= product.descripcion %></p>
+                    <p class="price">$<%= product.precio %></p>
+                    <a href="#" class="btn">Agregar al Carrito</a>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+  <footer>  
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Sobre Nosotros</h3>
+        <p>Cloup Co es una tienda online que ofrece productos de alta calidad para el hogar y la oficina.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <p>Teléfono: 123-456-7890</p>
+        <p>Email: info@cloupco.com</p>
+      </div>
+      <div class="footer-section">
+        <h3>Síguenos</h3>
+        <ul class="social-links">
+          <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+          <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 Cloup Co. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  <script>
+  function toggleMenu() {
+    var nav = document.getElementById("nav");
+    nav.classList.toggle("closed");
+  }
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
