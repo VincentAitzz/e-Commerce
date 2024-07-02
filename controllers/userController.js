@@ -26,6 +26,7 @@ exports.postLogin = async (req, res) => {
             } else {
                 req.session.loggedin = true;
                 req.session.name = results[0].nombre;
+                req.session.userID = results[0].id
                 res.render('login', {
                     alert: true,
                     alertTitle: "Conexión exitosa",

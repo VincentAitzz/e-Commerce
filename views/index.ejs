@@ -5,13 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cloup Co - Tienda Online</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="res/css/custom.css">  
+  <link rel="stylesheet" href="res/css/custom.css">
+  <link rel="stylesheet" href="res/css/variaciones.css">
+  <style>
+    .hero-section{
+    background: url(res/img/<%=page%>Bg.jpg) no-repeat center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+  }
+  </style>
 </head>
 <body>
-  
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand me-auto" href="#">Cloup Co</a>
+      <a class="navbar-brand me-auto" href="#">Cloup <strong>Co</strong></a>
       <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
@@ -20,10 +28,10 @@
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
             <li class="nav-item">
-              <a class="nav-link active mx-lg-2" aria-current="page" href="#">Inicio</a>
+              <a class="nav-link active mx-lg-2" aria-current="page" href="/">Inicio</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="#">Productos</a>
+              <a class="nav-link mx-lg-2" href="/product">Productos</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,7 +48,7 @@
             </li>
             <% if (login) { %>
               <li><a class="nav-link mx-lg-2" href="/perfil">Perfil</a></li>
-              <li><a class="nav-link mx-lg-2" href="/carrito"> Mi Carrito</a></li>
+              <li><a class="nav-link mx-lg-2" href="/cart"> Mi Carrito</a></li>
             <% } %>
           </ul>
         </div>
@@ -94,50 +102,40 @@
         <h1>¡Bienvenido/a!</h1>
       </div>
     </section>
-    <section class="featured-products">
-        <h2>Productos Destacados</h2>
-        <div class="product-grid">
-            <% featuredProducts.forEach(product => { %>
-                <div class="product-card">
-                    <img src="res/img/<%=product.imagen %>" alt="<%= product.nombre %>">
-                    <h3><%= product.nombre %></h3>
-                    <p><%= product.descripcion %></p>
-                    <p class="price">$<%= product.precio %></p>
-                    <a href="#" class="btn">Agregar al Carrito</a>
+    <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-cloumn my-5">
+      <h1>Productos Destacados</h1>
+    </div>
+    <section class="container my-2">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <% featuredProducts.forEach((product, index) => { %>
+                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                  <div class="card">
+                    <img src="res/img/<%=product.imagen %>" alt="<%= product.nombre %>" class="card-img-top">
+                    <div class="card-img-overlay">
+                      <h5 class="card-title"><%= product.nombre %></h5>
+                      <p class="card-text"><%= product.descripcion %></p>
+                      <p class=""><small>$<%= product.precio %></small></p>
+                      <a href="#" class="btn btn-primary">Agregar al Carrito</a>
+                    </div>
+                  </div>
                 </div>
-            <% }); %>
+              <% }); %>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon custom-carousel-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+              <span class="carousel-control-next-icon custom-carousel-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
         </div>
-    </section>
-  <footer>  
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Sobre Nosotros</h3>
-        <p>Cloup Co es una tienda online que ofrece productos de alta calidad para el hogar y la oficina.</p>
       </div>
-      <div class="footer-section">
-        <h3>Contacto</h3>
-        <p>Teléfono: 123-456-7890</p>
-        <p>Email: info@cloupco.com</p>
-      </div>
-      <div class="footer-section">
-        <h3>Síguenos</h3>
-        <ul class="social-links">
-          <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-          <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2023 Cloup Co. Todos los derechos reservados.</p>
-    </div>
-  </footer>
-  <script>
-  function toggleMenu() {
-    var nav = document.getElementById("nav");
-    nav.classList.toggle("closed");
-  }
-    </script>
+  </section>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

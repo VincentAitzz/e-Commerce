@@ -1,0 +1,23 @@
+.btn-primary {
+    background-color: #8122AA !important;
+    border-color: #8122AA !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #A533D7 !important;
+    border-color: #A533D7 !important;
+  }
+
+  .login-button{
+    background-color: #8122AA;
+    color: #F0F4EF;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s background-color;
+}
+
+.login-button:hover{
+    background-color: #A533D7;
+}

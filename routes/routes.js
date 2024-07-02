@@ -15,8 +15,8 @@ router.post('/register', userController.postRegister);
 router.get('/logout', userController.logout);
 
 // Rutas de productos
-router.get('/product', productController.getProduct);
-router.get('/product/:id', productController.getProduct);
+router.get('/product', productController.getProducts);
+router.get('/product/:id', productController.getProducts);
 
 // Rutas del carrito
 router.get('/cart', cartController.getCart);

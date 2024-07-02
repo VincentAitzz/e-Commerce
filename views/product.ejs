@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloup Co - Tienda Online</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="res/css/custom.css">  
+  <link rel="stylesheet" href="res/css/variaciones.css">
+
+  <style>
+    .hero-section{
+    background: url(res/img/<%=page%>Bg.jpg) no-repeat center;
+    background-size: cover;
+    width: 100%;
+    height: 98.4vh;
+  }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand me-auto" href="#">Cloup <strong>Co</strong></a>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link mx-lg-2" aria-current="page" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active mx-lg-2" href="/product">Productos</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Categorias
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+            <% if (login) { %>
+              <li><a class="nav-link mx-lg-2" href="/perfil">Perfil</a></li>
+              <li><a class="nav-link mx-lg-2" href="/cart"> Mi Carrito</a></li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+      <% if (login) { %>
+        <a class="login-button" href="/logout">Cerrar sesión</a>
+      <% } else { %>
+        <a class="login-button" href="/login">Iniciar sesión</a>
+      <% } %>
+      <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+    <section class="hero-section">
+      <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-cloumn">
+        <h1>Galeria de productos</h1>
+      </div>
+    </section>
+    <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-cloumn my-5">
+      <h1>Productos Disponibles</h1>
+    </div>
+    <div class="container d-flex justify-content-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <section class="container py-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4 py-5">
+        <% products.forEach(product => { %>
+        <div class="col">
+            <div class="card">
+                <img src="res/img/<%= product.imagen %>" alt="<%= product.nombre %>" class="card-img-top product-image">
+                <div class="card-body">
+                    <h5 class="card-title"><%= product.nombre %></h5>
+                    <input type="text" hidden value="<%= product.id %>" name="productID" id="productID">
+                    <p class="card-text"><%= product.descripcion %></p>
+                </div>
+                <div class="mb-5 d-flex justify-content-around">
+                  <p class="card-text"><small class="text-body-secondary">$<%= product.precio %></small></p>
+                  <% if (login) { %>
+                  <form action="/cart/add" method="POST">
+                      <input type="hidden" name="productId" value="<%= product.id %>">
+                      <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                  </form>
+                  <% } else { %>
+                  <a href="/login" class="btn btn-primary">Agregar al Carrito</a>
+                  <% } %>
+              </div>
+            </div>
+        </div>
+        <% }); %>
+        </div>
+    </section>
+    <div class="container d-flex justify-content-center mb-5">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                </li>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
