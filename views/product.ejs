@@ -91,14 +91,13 @@
                 <img src="res/img/<%= product.imagen %>" alt="<%= product.nombre %>" class="card-img-top product-image">
                 <div class="card-body">
                     <h5 class="card-title"><%= product.nombre %></h5>
-                    <input type="text" hidden value="<%= product.id %>" name="productID" id="productID">
                     <p class="card-text"><%= product.descripcion %></p>
                 </div>
                 <div class="mb-5 d-flex justify-content-around">
                   <p class="card-text"><small class="text-body-secondary">$<%= product.precio %></small></p>
                   <% if (login) { %>
                   <form action="/cart/add" method="POST">
-                      <input type="hidden" name="productId" value="<%= product.id %>">
+                      <input type="hidden" name="productID" value="<%= product.id %>">
                       <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
                   </form>
                   <% } else { %>

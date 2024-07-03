@@ -4,6 +4,8 @@ const homeController = require('../controllers/homeController');
 const userController = require('../controllers/userController');
 const productController = require('../controllers/productController');
 const cartController = require('../controllers/cartController');
+const orderController = require('../controllers/orderController');
+
 
 router.get('/', homeController.getHome);
 
@@ -22,5 +24,10 @@ router.get('/product/:id', productController.getProducts);
 router.get('/cart', cartController.getCart);
 router.post('/cart/add', cartController.addToCart);
 router.post('/cart/remove', cartController.removeFromCart);
+
+//Rutas de venta
+router.post('/checkout', orderController.checkout);
+router.get('/orderSummary/:orderId', orderController.getOrderSummary);
+router.post('/confirm-delete-cart', orderController.confirmAndDeleteCart);
 
 module.exports = router;
