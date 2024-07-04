@@ -21,7 +21,7 @@
                   <a class="nav-link mx-lg-2" aria-current="page" href="/">Inicio</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active mx-lg-2" href="/product">Productos</a>
+                  <a class="nav-link mx-lg-2" href="/product">Productos</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -38,7 +38,10 @@
                 </li>
                 <% if (login) { %>
                   <li><a class="nav-link mx-lg-2" href="/perfil">Perfil</a></li>
-                  <li><a class="nav-link mx-lg-2" href="/cart"> Mi Carrito</a></li>
+                  <li><a class="nav-link active mx-lg-2" href="/cart"> Mi Carrito</a></li>
+                  <% if (roles.includes('Administrador')) { %>
+                    <li><a class="nav-link mx-lg-2" href="/dashboard">Dashboard</a></li>
+                  <% } %>
                 <% } %>
               </ul>
             </div>

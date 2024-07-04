@@ -13,7 +13,7 @@
     background: url(res/img/<%=page%>Bg.jpg) no-repeat center;
     background-size: cover;
     width: 100%;
-    height: 98.4vh;
+    height: 100vh;
   }
   </style>
 </head>
@@ -50,6 +50,9 @@
             <% if (login) { %>
               <li><a class="nav-link mx-lg-2" href="/perfil">Perfil</a></li>
               <li><a class="nav-link mx-lg-2" href="/cart"> Mi Carrito</a></li>
+              <% if (roles.includes('Administrador')) { %>
+                <li><a class="nav-link mx-lg-2" href="/dashboard">Dashboard</a></li>
+              <% } %>
             <% } %>
           </ul>
         </div>

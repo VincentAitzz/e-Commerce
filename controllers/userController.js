@@ -1,4 +1,7 @@
 const connection = require('../config/db');
+const cartController = require('./cartController');
+const dashboardController = require('./dashboardController');
+const homeController = require('./homeController');
 
 exports.getLogin = (req, res) => {
     res.render('login');
@@ -6,40 +9,81 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = async (req, res) => {
     const user = req.body.user;
-    const pass = req.body.password;
+    const password = req.body.password;
 
-    if(user && pass){
-        connection.query('SELECT * FROM usuarios WHERE nombre = ?',[user], async (error, results)=>{
-            if (error) {
-                console.error(error);
-                res.status(500).send('Error al iniciar sesión');
-            } else if (results.length === 0 || pass !== results[0].password) {
-                res.render('login', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "USUARIO y/o PASSWORD incorrectas",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: 'login'
-                });
-            } else {
+    connection.query('SELECT * FROM usuarios WHERE nombre = ?', [user], (error, users) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error al iniciar sesión');
+        } else if (users.length > 0) {
+            const user = users[0];
+            if (user.password === password) {
                 req.session.loggedin = true;
-                req.session.name = results[0].nombre;
-                req.session.userID = results[0].id
+                req.session.userId = user.id;
+                req.session.name = `${user.nombre} ${user.apellido}`;
+
+                // Obtener o crear el carrito del usuario
+                cartController.getOrCreateCart(user.id)
+                    .then(cartId => {
+                        req.session.cartId = cartId;
+
+                        // Obtener los roles del usuario
+                        dashboardController.getUserRoles(user.id)
+                            .then(roles => {
+                                req.session.roles = roles;
+                                homeController.getTopSellingProducts()
+                                    .then(featuredProducts => {
+                                        // ... (código existente)
+                                        res.render('index', {
+                                            companyName: 'Cloup_co',
+                                            companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                                            name: req.session.name,
+                                            login: true,
+                                            alert: true,
+                                            alertTitle: "Conexión exitosa",
+                                            alertMessage: "¡LOGIN CORRECTO!",
+                                            alertIcon: 'success',
+                                            showConfirmButton: false,
+                                            timer: 1500,
+                                            ruta: '',
+                                            roles: req.session.roles,
+                                            page: 'home',
+                                            featuredProducts: featuredProducts
+                                        });
+                                    })
+                                    .catch(error => {
+                                        console.error(error);
+                                        res.status(500).send('Error al obtener los productos destacados');
+                                    });
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                res.status(500).send('Error al iniciar sesión');
+                            });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        res.status(500).send('Error al iniciar sesión');
+                    });
+            } else {
                 res.render('login', {
-                    alert: true,
-                    alertTitle: "Conexión exitosa",
-                    alertMessage: "¡LOGIN CORRECTO!",
-                    alertIcon: 'success',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    ruta: ''
+                    companyName: 'Cloup_co',
+                    companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                    name: '',
+                    login: false,
+                    error: 'Correo electrónico o contraseña incorrectos'
                 });
             }
-            res.end();
-        });
-    }
+        } else {
+            res.render('login', {
+                companyName: 'Cloup_co',
+                companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                name: '',
+                login: false,
+                error: 'Correo electrónico o contraseña incorrectos'
+            });
+        }
+    });
 };
 
 exports.getRegister = (req, res) => {
@@ -83,5 +127,20 @@ exports.logout = (req, res) => {
     } else {
         res.redirect('/');
     }
+};
+
+exports.getUserRoles = (userId) => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT r.nombre AS rol ' +
+                        'FROM usuarios_roles ur ' +
+                        'JOIN roles r ON ur.rol_id = r.id ' +
+                        'WHERE ur.usuario_id = ?', [userId], (error, roles) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(roles.map(role => role.rol));
+            }
+        });
+    });
 };
 

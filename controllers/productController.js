@@ -1,4 +1,5 @@
 const connection = require('../config/db');
+const dashboardController = require('./dashboardController');
 
 exports.getProducts = (req, res) => {
     const page = req.query.page ? parseInt(req.query.page) : 1; // Obtener el número de página de la URL
@@ -20,16 +21,25 @@ exports.getProducts = (req, res) => {
                     const totalPages = Math.ceil(totalProducts / limit);
 
                     if (req.session.loggedin) {
-                        res.render('product', {
-                            companyName: 'Cloup_co',
-                            companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
-                            name: req.session.name,
-                            login: true,
-                            products: products,
-                            currentPage: page,
-                            totalPages: totalPages,
-                            page: 'product'
-                        });
+                        // Obtener los roles del usuario
+                        dashboardController.getUserRoles(req.session.userId)
+                            .then(roles => {
+                                res.render('product', {
+                                    companyName: 'Cloup_co',
+                                    companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                                    name: req.session.name,
+                                    login: true,
+                                    roles: roles,
+                                    products: products,
+                                    currentPage: page,
+                                    totalPages: totalPages,
+                                    page: 'product'
+                                });
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                res.status(500).send('Error al obtener los roles');
+                            });
                     } else {
                         res.render('product', {
                             companyName: 'Cloup_co',
@@ -44,6 +54,47 @@ exports.getProducts = (req, res) => {
                     }
                 }
             });
+        }
+    });
+};
+exports.getProductsByCategory = (req, res) => {
+    const categoriaId = req.query.categoria || req.body.categoria;
+
+    connection.query('CALL sp_get_products_by_category(?)', [categoriaId], (error, products) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error al obtener los productos');
+        } else {
+            if (req.session.loggedin) {
+                // Obtener los roles del usuario
+                dashboardController.getUserRoles(req.session.userId)
+                    .then(roles => {
+                        res.render('product_by_category', {
+                            companyName: 'Cloup_co',
+                            companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                            name: req.session.name,
+                            login: true,
+                            roles: roles,
+                            products: products[0],
+                            categoriaId: categoriaId,
+                            page: 'product'
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        res.status(500).send('Error al obtener los roles');
+                    });
+            } else {
+                res.render('product_by_category', {
+                    companyName: 'Cloup_co',
+                    companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                    name: '',
+                    login: false,
+                    products: products[0],
+                    categoriaId: categoriaId,
+                    page: 'product'
+                });
+            }
         }
     });
 };

@@ -1,19 +1,38 @@
 const connection = require('../config/db');
+const dashboardController = require('./dashboardController');
+
+exports.getTopSellingProducts = () => {
+    return new Promise((resolve, reject) => {
+        connection.query('CALL sp_get_top_selling_products()', (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results[0]);
+            }
+        });
+    });
+};
 
 exports.getHome = (req, res) => {
-    connection.query('CALL sp_get_top_selling_products()', (error, featuredProducts) => {
-        if (error) {
-            console.error(error);
-            res.status(500).send('Error al obtener los productos destacados');
-        } else {
+    this.getTopSellingProducts()
+        .then(featuredProducts => {
             if (req.session.loggedin) {
-                    res.render('index', {
-                        companyName: 'Cloup_co',
-                        companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
-                        name: req.session.name,
-                        login: true,
-                        featuredProducts: featuredProducts[0],
-                        page: 'home'
+                // Obtener los roles del usuario
+                dashboardController.getUserRoles(req.session.userId)
+                    .then(roles => {
+                        res.render('index', {
+                            companyName: 'Cloup_co',
+                            companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                            name: req.session.name,
+                            login: true,
+                            roles: roles,
+                            featuredProducts: featuredProducts,
+                            page: 'home'
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        res.status(500).send('Error al obtener los roles');
                     });
             } else {
                 res.render('index', {
@@ -21,10 +40,13 @@ exports.getHome = (req, res) => {
                     companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
                     name: '',
                     login: false,
-                    featuredProducts: featuredProducts[0], 
+                    featuredProducts: featuredProducts,
                     page: 'home'
                 });
             }
-        }
-    });
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).send('Error al obtener los productos destacados');
+        });
 };

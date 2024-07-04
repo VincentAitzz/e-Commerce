@@ -5,6 +5,8 @@ const userController = require('../controllers/userController');
 const productController = require('../controllers/productController');
 const cartController = require('../controllers/cartController');
 const orderController = require('../controllers/orderController');
+const dashboardController = require('../controllers/dashboardController');
+
 
 
 router.get('/', homeController.getHome);
@@ -19,6 +21,7 @@ router.get('/logout', userController.logout);
 // Rutas de productos
 router.get('/product', productController.getProducts);
 router.get('/product/:id', productController.getProducts);
+router.get('/product/category', productController.getProductsByCategory);
 
 // Rutas del carrito
 router.get('/cart', cartController.getCart);
@@ -29,5 +32,9 @@ router.post('/cart/remove', cartController.removeFromCart);
 router.post('/checkout', orderController.checkout);
 router.get('/orderSummary/:orderId', orderController.getOrderSummary);
 router.post('/confirm-delete-cart', orderController.confirmAndDeleteCart);
+
+//Rutas del Dashboard
+router.get('/dashboard', dashboardController.checkUserRoles, dashboardController.getDashboard);
+
 
 module.exports = router;

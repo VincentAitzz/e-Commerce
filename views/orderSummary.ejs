@@ -21,9 +21,9 @@
                 <% orderData.forEach(item => { %>
                     <tr>
                         <td><%= item.nombre %></td>
-                        <td>$<%= item.precio.toFixed(2) %></td>
+                        <td>$<%= item.precio %></td>
                         <td><%= item.cantidad %></td>
-                        <td>$<%= (item.precio * item.cantidad).toFixed(2) %></td>
+                        <td>$<%= item.total %></td>
                     </tr>
                 <% }); %>
             </tbody>
@@ -33,31 +33,31 @@
         </div>
         <button id="confirmDeleteCart" class="btn btn-danger">Confirmar y Eliminar Carrito</button>
 
-<script>
-document.getElementById('confirmDeleteCart').addEventListener('click', () => {
-    fetch('/confirm-delete-cart', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            cartId: '<%= cartId %>',
-            confirm: true
-        })
-    })
-    .then(response => {
-        if (response.ok) {
-            alert('Carrito eliminado exitosamente');
-        } else {
-            alert('Error al eliminar el carrito');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Ocurrió un error al eliminar el carrito');
-    });
-});
-</script>
+        <script>
+        document.getElementById('confirmDeleteCart').addEventListener('click', () => {
+            fetch('/confirm-delete-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cartId: '<%= cartId %>',
+                    confirm: true
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Carrito eliminado exitosamente');
+                } else {
+                    alert('Error al eliminar el carrito');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al eliminar el carrito');
+            });
+        });
+        </script>
     </div>
 </body>
 </html>
