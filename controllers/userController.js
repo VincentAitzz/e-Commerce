@@ -6,7 +6,6 @@ const homeController = require('./homeController');
 exports.getLogin = (req, res) => {
     res.render('login');
 };
-
 exports.postLogin = async (req, res) => {
     const user = req.body.user;
     const password = req.body.password;
@@ -31,30 +30,39 @@ exports.postLogin = async (req, res) => {
                         dashboardController.getUserRoles(user.id)
                             .then(roles => {
                                 req.session.roles = roles;
-                                homeController.getTopSellingProducts()
-                                    .then(featuredProducts => {
-                                        // ... (código existente)
-                                        res.render('index', {
-                                            companyName: 'Cloup_co',
-                                            companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
-                                            name: req.session.name,
-                                            login: true,
-                                            alert: true,
-                                            alertTitle: "Conexión exitosa",
-                                            alertMessage: "¡LOGIN CORRECTO!",
-                                            alertIcon: 'success',
-                                            showConfirmButton: false,
-                                            timer: 1500,
-                                            ruta: '',
-                                            roles: req.session.roles,
-                                            page: 'home',
-                                            featuredProducts: featuredProducts
-                                        });
-                                    })
-                                    .catch(error => {
+
+                                // Obtener las categorías
+                                connection.query('SELECT * FROM categorias', (error, categorias) => {
+                                    if (error) {
                                         console.error(error);
-                                        res.status(500).send('Error al obtener los productos destacados');
-                                    });
+                                        res.status(500).send('Error al obtener las categorías');
+                                    } else {
+                                        homeController.getTopSellingProducts()
+                                            .then(featuredProducts => {
+                                                res.render('login', {
+                                                    companyName: 'Cloup_co',
+                                                    companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                                                    name: req.session.name,
+                                                    login: true,
+                                                    alert: true,
+                                                    alertTitle: "Conexión exitosa",
+                                                    alertMessage: "¡LOGIN CORRECTO!",
+                                                    alertIcon: 'success',
+                                                    showConfirmButton: false,
+                                                    timer: 1500,
+                                                    ruta: '',
+                                                    roles: req.session.roles,
+                                                    categorias: categorias,
+                                                    page: 'home',
+                                                    featuredProducts: featuredProducts
+                                                });
+                                            })
+                                            .catch(error => {
+                                                console.error(error);
+                                                res.status(500).send('Error al obtener los productos destacados');
+                                            });
+                                    }
+                                });
                             })
                             .catch(error => {
                                 console.error(error);

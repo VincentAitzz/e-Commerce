@@ -1,21 +1,14 @@
 const connection = require('../config/db');
 const dashboardController = require('./dashboardController');
 
-exports.getTopSellingProducts = () => {
-    return new Promise((resolve, reject) => {
-        connection.query('CALL sp_get_top_selling_products()', (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0]);
-            }
-        });
-    });
-};
+exports.getProductsByCategory = (req, res) => {
+    const categoriaId = req.query.categoria;
 
-exports.getHome = (req, res) => {
-    this.getTopSellingProducts()
-        .then(featuredProducts => {
+    connection.query('CALL sp_get_products_by_category(?)', [categoriaId], (error, products) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error al obtener los productos');
+        } else {
             // Obtener las categorías
             connection.query('SELECT * FROM categorias', (error, categorias) => {
                 if (error) {
@@ -26,15 +19,15 @@ exports.getHome = (req, res) => {
                         // Obtener los roles del usuario
                         dashboardController.getUserRoles(req.session.userId)
                             .then(roles => {
-                                res.render('index', {
+                                res.render('category', {
                                     companyName: 'Cloup_co',
                                     companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
                                     name: req.session.name,
                                     login: true,
                                     roles: roles,
-                                    featuredProducts: featuredProducts,
-                                    categorias: categorias,
-                                    page: 'home'
+                                    products: products[0],
+                                    categoriaId: categoriaId,
+                                    categorias: categorias
                                 });
                             })
                             .catch(error => {
@@ -42,21 +35,18 @@ exports.getHome = (req, res) => {
                                 res.status(500).send('Error al obtener los roles');
                             });
                     } else {
-                        res.render('index', {
+                        res.render('category', {
                             companyName: 'Cloup_co',
                             companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
                             name: '',
                             login: false,
-                            featuredProducts: featuredProducts,
-                            categorias: categorias,
-                            page: 'home'
+                            products: products[0],
+                            categoriaId: categoriaId,
+                            categorias: categorias
                         });
                     }
                 }
             });
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(500).send('Error al obtener los productos destacados');
-        });
+        }
+    });
 };

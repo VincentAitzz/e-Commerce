@@ -5,33 +5,41 @@ exports.getCart = (req, res) => {
     if (req.session.loggedin) {
         const userId = req.session.userId;
 
-        dashboardController.getUserRoles(req.session.userId).then( roles => {
-            connection.query('SELECT c.id AS carrito_id, p.id AS producto_id, p.nombre, p.precio, p.imagen, cp.cantidad ' +
-                'FROM carrito c ' +
-                'JOIN carrito_productos cp ON c.id = cp.carrito_id ' +
-                'JOIN productos p ON cp.producto_id = p.id ' +
-                'WHERE c.usuario_id = ?', [userId], (error, cart) => {
-                if (error) {
-                    console.error(error);
-                    res.status(500).send('Error al obtener el carrito');
-                } else {
-                    res.render('cart', {
-                        companyName: 'Cloup_co',
-                        companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
-                        name: req.session.name,
-                        login: true,
-                        cart: cart,
-                        roles: roles
+        dashboardController.getUserRoles(req.session.userId)
+            .then(roles => {
+                connection.query('SELECT c.id AS carrito_id, p.id AS producto_id, p.nombre, p.precio, p.imagen, cp.cantidad ' +
+                    'FROM carrito c ' +
+                    'JOIN carrito_productos cp ON c.id = cp.carrito_id ' +
+                    'JOIN productos p ON cp.producto_id = p.id ' +
+                    'WHERE c.usuario_id = ?', [userId], (error, cart) => {
+                        if (error) {
+                            console.error(error);
+                            res.status(500).send('Error al obtener el carrito');
+                        } else {
+                            // Obtener las categorías
+                            connection.query('SELECT * FROM categorias', (error, categorias) => {
+                                if (error) {
+                                    console.error(error);
+                                    res.status(500).send('Error al obtener las categorías');
+                                } else {
+                                    res.render('cart', {
+                                        companyName: 'Cloup_co',
+                                        companyDescription: 'Somos una empresa dedicada a la venta de productos en línea.',
+                                        name: req.session.name,
+                                        login: true,
+                                        cart: cart,
+                                        roles: roles,
+                                        categorias: categorias
+                                    });
+                                }
+                            });
+                        }
                     });
-                }
+            })
+            .catch(error => {
+                console.error(error);
+                res.status(500).send('Error al obtener los roles');
             });
-        }).catch(error =>{
-            console.error(error);
-            res.status(500).send('Error al obtener los roles');
-        });
-        // Obtener el carrito del usuario
-            
-        
     } else {
         res.render('login', {
             companyName: 'Cloup_co',
@@ -41,6 +49,7 @@ exports.getCart = (req, res) => {
         });
     }
 };
+
 
 exports.addToCart = (req, res) => {
     if (req.session.loggedin) {
