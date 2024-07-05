@@ -81,7 +81,7 @@
               <p class="card-text">Precio: $<%= product.precio %></p>
               <% if (login) { %>
                 <form action="/cart/add" method="POST">
-                  <input type="hidden" name="productID" value="<%= product.id %>">
+                  <input type="hidden" name="productId" value="<%= product.id %>">
                   <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
                 </form>
               <% } else { %>
