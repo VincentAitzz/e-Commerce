@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/res/css/variaciones.css">
+  <link rel="stylesheet" href="/res/css/dashboard.css">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2">
+        <!-- Aquí va la barra de navegación vertical -->
+        <header>
+          <nav class="navbar">
+            <div class="navbar-brand">
+              Cloup <strong>Co</strong>
+            </div>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" href="/dashboard">Dashboard Principal</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dashboardUsuarios">Lista Usuarios</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/carrito">Lista Roles</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/productos">Lista Productos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/carrito">Lista Ventas</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Administraciones
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Administracion Usuarios</a></li>
+                  <li><a class="dropdown-item" href="#">Administracion Roles</a></li>
+                  <li><a class="dropdown-item" href="#">Administracion Productos</a></li>
+                  <li><a class="dropdown-item" href="#">Administracion Ventas</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a class="login-button" href="/">Ir a vista Clientes</a>
+            <div class="developer-info">
+              <div class="images">
+                <img src="res/img/devProfile.png" alt="Foto del Desarrollador">
+                <img src="res/img/logoInstitucion.png" alt="Logo de la Institución">
+              </div>
+              <div class="info">
+                <p>Vicente Pavez</p>
+                <p>v.andrehpavez@gmail.com</p>
+              </div>
+            </div>
+          </nav>
+        </header>
+      </div>
+      <div class="dashboard-content col-md-10">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Ventas Totales</h5>
+                  <p class="card-text" id="totalSales">
+                    <%=totalSales%>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Número de Pedidos</h5>
+                  <p class="card-text" id="orderCount">
+                    <%=orderCount%>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Productos Más Vendidos</h5>
+                  <ul class="list-group list-group-flush" id="topSellingProducts">
+                    <% topSellingProducts.forEach(product=> { %>
+                      <li class="list-group-item">
+                        <%=product%>
+                      </li>
+                      <% }); %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Ingreso Promedio por Pedido</h5>
+                  <p class="card-text" id="averageOrderValue">
+                    <%=averageOrderValue%>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Categorías con Mayor Facturación</h5>
+                  <ul class="list-group list-group-flush" id="topSellingCategories">
+                    <% topSellingCategories.forEach(category=> { %>
+                      <li class="list-group-item">
+                        <%=category%>
+                      </li>
+                      <% }); %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Valor del Carrito Promedio</h5>
+                  <p class="card-text" id="averageCartValue">
+                    <%=averageCartValue%>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Clientes Nuevos vs. Recurrentes</h5>
+                  <p class="card-text">Nuevos: <span id="newCustomers">
+                      <%=newCustomers%>
+                    </span></p>
+                  <p class="card-text">Recurrentes: <span id="recurringCustomers">
+                      <%=recurringCustomers%>
+                    </span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    console.log('Script loaded');
+    document.addEventListener('DOMContentLoaded', function() {
+      const dateRangeSelects = document.querySelectorAll('.date-range-select');
+      dateRangeSelects.forEach(select => {
+        select.addEventListener('change', updateDashboardData);
+      });
+    });
+  
+    async function updateDashboardData() {
+      const salesDateRange = document.getElementById('salesDateRange').value;
+      const orderDateRange = document.getElementById('orderDateRange').value;
+      const topProductsDateRange = document.getElementById('topProductsDateRange').value;
+      const averageOrderDateRange = document.getElementById('averageOrderDateRange').value;
+      const topCategoriesDateRange = document.getElementById('topCategoriesDateRange').value;
+      const averageCartDateRange = document.getElementById('averageCartDateRange').value;
+      const customerDateRange = document.getElementById('customerDateRange').value;
+  
+      const response = await fetch('/dashboard/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          salesDateRange,
+          orderDateRange,
+          topProductsDateRange,
+          averageOrderDateRange,
+          topCategoriesDateRange,
+          averageCartDateRange,
+          customerDateRange
+        })
+      });
+  
+      const data = await response.json();
+  
+      // Actualizar los datos en la vista
+      document.getElementById('totalSales').textContent = data.totalSales;
+      document.getElementById('orderCount').textContent = data.orderCount;
+      document.getElementById('topSellingProducts').innerHTML = '';
+      data.topSellingProducts.forEach(product => {
+        const listItem = document.createElement('li');
+        listItem.textContent = product;
+        listItem.classList.add('list-group-item');
+        document.getElementById('topSellingProducts').appendChild(listItem);
+      });
+      document.getElementById('averageOrderValue').textContent = data.averageOrderValue;
+      document.getElementById('topSellingCategories').innerHTML = '';
+      data.topSellingCategories.forEach(category => {
+        const listItem = document.createElement('li');
+        listItem.textContent = category;
+        listItem.classList.add('list-group-item');
+        document.getElementById('topSellingCategories').appendChild(listItem);
+      });
+      document.getElementById('averageCartValue').textContent = data.averageCartValue;
+      document.getElementById('newCustomers').textContent = data.newCustomers;
+      document.getElementById('recurringCustomers').textContent = data.recurringCustomers;
+    }
+  </script>
+</body>
+</html>

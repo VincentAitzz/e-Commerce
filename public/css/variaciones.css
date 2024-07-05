@@ -1,3 +1,16 @@
+/* variables.css */
+:root {
+  --color-primary: #222222;
+  --color-secondary: #222222;
+  --color-accent: #549F93;
+  --color-button: #258EA6;
+  --color-text: #222222;
+  --color-menu-text: #F0F4EF;
+  --color-background: #F0F4EF;
+  --color-card-background: #E8EEE7;
+  --color-card-shadow: rgba(84, 159, 147, 0.5);
+  --color-divider: #E8EEE7;
+}
 .btn-primary {
     background-color: #8122AA !important;
     border-color: #8122AA !important;

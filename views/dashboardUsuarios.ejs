@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/res/css/variaciones.css">
+    <link rel="stylesheet" href="/res/css/dashboard.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Aquí va la barra de navegación vertical -->
+                <header>
+                    <nav class="navbar">
+                        <div class="navbar-brand">
+                            Cloup <strong>Co</strong>
+                        </div>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link " href="/dashboard">Dashboard Principal</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/dashboardUsuarios">Lista Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/carrito">Lista Roles</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/productos">Lista Productos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/carrito">Lista Ventas</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Administraciones
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Administracion Usuarios</a></li>
+                                    <li><a class="dropdown-item" href="#">Administracion Roles</a></li>
+                                    <li><a class="dropdown-item" href="#">Administracion Productos</a></li>
+                                    <li><a class="dropdown-item" href="#">Administracion Ventas</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <a class="login-button" href="/">Ir a vista Clientes</a>
+                        <div class="developer-info">
+                            <div class="images">
+                                <img src="res/img/devProfile.png" alt="Foto del Desarrollador">
+                                <img src="res/img/logoInstitucion.png" alt="Logo de la Institución">
+                            </div>
+                            <div class="info">
+                                <p>Vicente Pavez</p>
+                                <p>v.andrehpavez@gmail.com</p>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            </div>
+            <div class="dashboard-content col-md-10">
+                <div class="container">
+                    <h2>Administracion de Usuarios</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Crear Usuario</h3>
+                            <form action="/usuarios" method="POST">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre:</label>
+                                    <input type="text" id="nombre" name="nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apellido">Apellido:</label>
+                                    <input type="text" id="apellido" name="apellido" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Contraseña:</label>
+                                    <input type="password" id="password" name="password" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Crear</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Editar Usuario</h3>
+                            <form id="form-editar" method="POST">
+                              <div class="form-group">
+                                <label for="nombre-editar">Nombre:</label>
+                                <input type="text" id="nombre-editar" name="nombre" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="apellido-editar">Apellido:</label>
+                                <input type="text" id="apellido-editar" name="apellido" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="email-editar">Email:</label>
+                                <input type="email" id="email-editar" name="email" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="password-editar">Contraseña:</label>
+                                <input type="password" id="password-editar" name="password" required>
+                              </div>
+                              <button type="submit" class="btn btn-warning">Actualizar</button>
+                            </form>
+                          </div>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% usuarios.forEach(usuario=> { %>
+                                <tr onclick="seleccionarUsuario('<%= usuario.id %>')">
+                                    <td>
+                                        <%= usuario.id %>
+                                    </td>
+                                    <td>
+                                        <%= usuario.nombre %>
+                                    </td>
+                                    <td>
+                                        <%= usuario.apellido %>
+                                    </td>
+                                    <td>
+                                        <%= usuario.email %>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            onclick="eliminarUsuario('<%= usuario.id %>')">Eliminar</button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function seleccionarUsuario(usuarioId) {
+            fetch(`/usuarios/${usuarioId}`)
+                .then(response => response.json())
+                .then(usuario => {
+                    document.getElementById('nombre-editar').value = usuario.nombre;
+                    document.getElementById('apellido-editar').value = usuario.apellido;
+                    document.getElementById('email-editar').value = usuario.email;
+                    document.getElementById('password-editar').value = '';
+
+                    document.getElementById('form-editar').action = `/usuarios/${usuarioId}/edit`;
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos del usuario:', error);
+                    alert('Error al obtener los datos del usuario');
+                });
+        }
+
+        function eliminarUsuario(usuarioId) {
+            if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                fetch(`/usuarios/${usuarioId}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Usuario eliminado exitosamente');
+                            window.location.reload();
+                        } else {
+                            alert('Error al eliminar el usuario');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar el usuario:', error);
+                        alert('Error al eliminar el usuario');
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>

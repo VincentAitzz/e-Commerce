@@ -7,6 +7,7 @@ const cartController = require('../controllers/cartController');
 const orderController = require('../controllers/orderController');
 const dashboardController = require('../controllers/dashboardController');
 const categoryController = require('../controllers/categoryController');
+const dUserController = require('../controllers/dUsuariosController');
 
 
 router.get('/', homeController.getHome);
@@ -34,7 +35,20 @@ router.get('/orderSummary/:orderId', orderController.getOrderSummary);
 router.post('/confirm-delete-cart', orderController.confirmAndDeleteCart);
 
 //Rutas del Dashboard
-router.get('/dashboard', dashboardController.checkUserRoles, dashboardController.getDashboard);
+router.get('/dashboard', dashboardController.checkUserRoles, dashboardController.getDashboardData);
+router.get('/dashboardUsuarios', dUserController.getDashboardUsuarios);
+router.get('/usuarios/:id', dUserController.getUsuarioById);
+router.post('/usuarios', dUserController.createUsuario);
+router.post('/usuarios/:id/edit', dUserController.updateUsuario);
+router.delete('/usuarios/:id', dUserController.deleteUsuario);
+
+router.post('/dashboard/sales', dashboardController.updateSalesData);
+router.post('/dashboard/orders', dashboardController.updateOrderData);
+router.post('/dashboard/top-products', dashboardController.updateTopProductsData);
+router.post('/dashboard/average-order', dashboardController.updateAverageOrderData);
+router.post('/dashboard/top-categories', dashboardController.updateTopCategoriesData);
+router.post('/dashboard/average-cart', dashboardController.updateAverageCartData);
+router.post('/dashboard/customers', dashboardController.updateCustomerData);
 
 
 module.exports = router;
