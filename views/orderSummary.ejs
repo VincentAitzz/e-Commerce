@@ -31,7 +31,7 @@
         <div class="d-flex justify-content-end">
             <h3>Total: $<%= total.toFixed(2) %></h3>
         </div>
-        <button id="confirmDeleteCart" class="btn btn-danger">Confirmar y Eliminar Carrito</button>
+        <button id="confirmDeleteCart" class="btn btn-primary">Volver atras</button>
 
         <script>
         document.getElementById('confirmDeleteCart').addEventListener('click', () => {
@@ -48,6 +48,7 @@
             .then(response => {
                 if (response.ok) {
                     alert('Carrito eliminado exitosamente');
+                    window.location.href = '/';
                 } else {
                     alert('Error al eliminar el carrito');
                 }

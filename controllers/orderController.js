@@ -87,8 +87,6 @@ exports.getOrderSummary = (req, res) => {
 exports.confirmAndDeleteCart = (req, res) => {
     const userId = req.session.userId;
     const cartId = req.body.cartId;
-    const confirm = req.body.confirm === 'true';
-
     // Verificar si el carrito pertenece al usuario actual
     connection.query('SELECT id FROM carrito WHERE id = ? AND usuario_id = ?', [cartId, userId], (error, result) => {
         if (error) {
@@ -99,12 +97,12 @@ exports.confirmAndDeleteCart = (req, res) => {
             res.sendStatus(403); // Enviar código de estado 403 Forbidden
         } else {
             // Llamar al procedimiento almacenado para eliminar el carrito
-            connection.query('CALL sp_confirm_and_delete_cart(?, ?)', [cartId, confirm], (error, result) => {
+            connection.query('CALL sp_confirm_and_delete_cart(?)', [cartId], (error, result) => {
                 if (error) {
                     console.error(error);
                     res.status(500).send('Error al eliminar el carrito');
                 } else {
-                    res.sendStatus(200);
+                    res.status(200).send();
                 }
             });
         }
